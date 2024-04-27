@@ -8,7 +8,7 @@
     <artifactId>bookstore</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>bookstore-microservices</name>
+    <name>bookstore</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

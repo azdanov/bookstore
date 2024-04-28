@@ -1,4 +1,4 @@
-package dev.azdanov.catalogservice;
+package dev.azdanov.orderservice;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -9,7 +9,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-@Import(PostgresConfig.class)
+@Import({PostgresConfig.class, RabbitMqConfig.class})
 public abstract class AbstractIntegrationTest {
 
     @LocalServerPort

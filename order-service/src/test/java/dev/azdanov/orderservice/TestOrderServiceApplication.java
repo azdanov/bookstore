@@ -1,11 +1,11 @@
-package dev.azdanov.catalogservice;
+package dev.azdanov.orderservice;
 
 import org.springframework.boot.SpringApplication;
 
-public class TestCatalogServiceApplication {
+public class TestOrderServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.from(CatalogServiceApplication::main)
+        SpringApplication.from(OrderServiceApplication::main)
                 .with(PostgresConfig.class)
                 .run(args);
     }

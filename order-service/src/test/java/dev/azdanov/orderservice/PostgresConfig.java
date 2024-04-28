@@ -1,4 +1,4 @@
-package dev.azdanov.catalogservice;
+package dev.azdanov.orderservice;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -7,7 +7,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 @TestConfiguration(proxyBeanMethods = false)
-class ContainersConfig {
+class PostgresConfig {
 
     @Bean
     @ServiceConnection

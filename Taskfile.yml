@@ -2,8 +2,7 @@ version: '3'
 vars:
   GOOS: "{{default OS .GOOS}}"
   MVNW: '{{if eq .GOOS "windows"}}mvnw.cmd{{else}}./mvnw{{end}}'
-  COMPOSE_DIR: "deployment/docker-compose"
-  INFRA_COMPOSE_FILE: "{{.COMPOSE_DIR}}/infra.yml"
+  COMPOSE_FILE: "deployment/compose.yml"
 tasks:
   default:
     cmds:
@@ -17,18 +16,30 @@ tasks:
       - "{{.MVNW}} spotless:apply"
   build:
     cmds:
-      - "{{.MVNW}} verify"
+      - "{{.MVNW}} -pl catalog-service spring-boot:build-image -DskipTests"
   start_infra:
     cmds:
-      - "docker compose -f {{.INFRA_COMPOSE_FILE}} up -d"
+      - "docker compose -f {{.COMPOSE_FILE}} --profile infra up -d"
   stop_infra:
     cmds:
-      - "docker compose -f {{.INFRA_COMPOSE_FILE}} down"
+      - "docker compose -f {{.COMPOSE_FILE}} --profile infra down"
   restart_infra:
     cmds:
       - task: stop_infra
       - task: sleep
       - task: start_infra
+  start:
+    deps: [build]
+    cmds:
+      - "docker compose -f {{.COMPOSE_FILE}} --profile app --profile infra up -d"
+  stop:
+    cmds:
+      - "docker compose -f {{.COMPOSE_FILE}} --profile app --profile infra down"
+  restart:
+    cmds:
+      - task: stop
+      - task: sleep
+      - task: start
   sleep:
     vars:
       DURATION: "{{default 5 .DURATION}}"

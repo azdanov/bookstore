@@ -21,6 +21,7 @@
         <springdoc-openapi.version>2.5.0</springdoc-openapi.version>
         <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
         <palantirJavaFormat.version>2.44.0</palantirJavaFormat.version>
+        <dockerImageName>azdanov/bookstore-${project.artifactId}</dockerImageName>
     </properties>
 
     <dependencies>
@@ -103,6 +104,12 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <image>
+                        <name>${dockerImageName}</name>
+                        <builder>dashaun/builder:tiny</builder>
+                    </image>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

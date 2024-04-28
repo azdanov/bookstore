@@ -9,6 +9,6 @@ create table products
     image_url   text,
     price       numeric                                                    not null check (price >= 0),
     created_at  timestamp with time zone default current_timestamp         not null,
-    updated_at  timestamp with time zone default current_timestamp         not null,
+    updated_at  timestamp with time zone,
     primary key (id)
 );

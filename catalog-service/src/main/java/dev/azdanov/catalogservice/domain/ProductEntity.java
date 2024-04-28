@@ -40,31 +40,9 @@ class ProductEntity {
     private BigDecimal price;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(nullable = false)
     private LocalDateTime updatedAt;
-
-    public ProductEntity() {}
-
-    public ProductEntity(
-            Long id,
-            String code,
-            String name,
-            String description,
-            String imageUrl,
-            BigDecimal price,
-            LocalDateTime createdAt,
-            LocalDateTime updatedAt) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.price = price;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 
     @PreUpdate
     public void preUpdate() {

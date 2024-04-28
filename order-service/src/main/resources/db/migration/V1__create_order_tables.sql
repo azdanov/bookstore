@@ -17,7 +17,7 @@ create table orders
     status                    text                                                     not null,
     comments                  text,
     created_at                timestamp with time zone default current_timestamp       not null,
-    updated_at                timestamp with time zone default current_timestamp       not null,
+    updated_at                timestamp with time zone,
     primary key (id)
 );
 

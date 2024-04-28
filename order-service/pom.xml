@@ -22,7 +22,9 @@
 		<resilience4j.version>2.2.0</resilience4j.version>
 		<spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
 		<palantirJavaFormat.version>2.44.0</palantirJavaFormat.version>
-		<instancio.version>4.5.0</instancio.version>
+		<instancio.version>4.5.1</instancio.version>
+		<wiremock.version>3.5.4</wiremock.version>
+		<wiremock-testcontainers.version>1.0-alpha-13</wiremock-testcontainers.version>
 		<dockerImageName>azdanov/bookstore-${project.artifactId}</dockerImageName>
 	</properties>
 
@@ -124,6 +126,18 @@
 			<version>${instancio.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.wiremock</groupId>
+			<artifactId>wiremock-standalone</artifactId>
+			<version>${wiremock.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.wiremock.integrations.testcontainers</groupId>
+			<artifactId>wiremock-testcontainers-module</artifactId>
+			<version>${wiremock-testcontainers.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -192,5 +206,12 @@
 			</plugin>
 		</plugins>
 	</build>
+	<repositories>
+		<repository>
+			<id>maven_central</id>
+			<name>Maven Central</name>
+			<url>https://repo.maven.apache.org/maven2/</url>
+		</repository>
+	</repositories>
 
 </project>

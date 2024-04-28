@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 import dev.azdanov.orderservice.AbstractIntegrationTest;
 import io.restassured.http.ContentType;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,8 @@ class OrderControllerIntegrationTest extends AbstractIntegrationTest {
     class CreateOrderTest {
         @Test
         void shouldCreateOrderSuccessfully() {
+            mockGetProductByCode("P100", "Product 1", new BigDecimal("25.50"));
+
             var payload = createValidOrderRequest();
             given().contentType(ContentType.JSON)
                     .body(payload)

@@ -13,28 +13,33 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final String SERVICE_NAME = "catalog-service";
+    public static final String CATEGORY_GENERIC = "Generic";
     private static final URI INTERNAL_SERVER_ERROR_TYPE = URI.create("https://http.dev/500");
     private static final URI NOT_FOUND_TYPE = URI.create("https://http.dev/404");
 
     @ExceptionHandler(Exception.class)
     ProblemDetail handleUnhandledException(Exception e) {
-        ProblemDetail problemDetail =
-                ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        problemDetail.setTitle("Internal Server Error");
-        problemDetail.setType(INTERNAL_SERVER_ERROR_TYPE);
-        problemDetail.setProperty("service", SERVICE_NAME);
-        problemDetail.setProperty("error_category", "Generic");
-        problemDetail.setProperty("timestamp", Instant.now());
-        return problemDetail;
+        return buildProblemDetail(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Internal Server Error",
+                INTERNAL_SERVER_ERROR_TYPE,
+                e.getMessage(),
+                CATEGORY_GENERIC);
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
     ProblemDetail handleProductNotFoundException(ProductNotFoundException e) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
-        problemDetail.setTitle("Product Not Found");
-        problemDetail.setType(NOT_FOUND_TYPE);
+        return buildProblemDetail(
+                HttpStatus.NOT_FOUND, "Product Not Found", NOT_FOUND_TYPE, e.getMessage(), CATEGORY_GENERIC);
+    }
+
+    private ProblemDetail buildProblemDetail(
+            HttpStatus status, String title, URI type, String detail, String errorCategory) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
+        problemDetail.setTitle(title);
+        problemDetail.setType(type);
         problemDetail.setProperty("service", SERVICE_NAME);
-        problemDetail.setProperty("error_category", "Generic");
+        problemDetail.setProperty("error_category", errorCategory);
         problemDetail.setProperty("timestamp", Instant.now());
         return problemDetail;
     }

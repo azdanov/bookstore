@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql(scripts = "/scripts/INIT_PRODUCTS.sql")
-class ProductControllerTest extends AbstractIntegrationTest {
+class ProductControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void products_whenNoParams_shouldReturnFirstPage() {

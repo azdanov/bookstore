@@ -2,7 +2,7 @@ package dev.azdanov.catalogservice;
 
 import org.junit.jupiter.api.Test;
 
-class CatalogServiceApplicationTest extends AbstractIntegrationTest {
+class CatalogServiceApplicationIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void contextLoads() {}

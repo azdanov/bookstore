@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql(scripts = "/scripts/INIT_PRODUCTS.sql")
-class ProductRepositoryTest extends AbstractJpaTest {
+class ProductRepositoryJpaTest extends AbstractJpaTest {
 
     @Autowired
     private ProductRepository productRepository;

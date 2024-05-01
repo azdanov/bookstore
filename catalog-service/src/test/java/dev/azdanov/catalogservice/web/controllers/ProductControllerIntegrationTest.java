@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql(scripts = "/scripts/INIT_PRODUCTS.sql")
+@Sql("/scripts/INIT_PRODUCTS.sql")
 class ProductControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test

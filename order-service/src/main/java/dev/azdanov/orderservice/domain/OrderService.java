@@ -2,8 +2,11 @@ package dev.azdanov.orderservice.domain;
 
 import dev.azdanov.orderservice.domain.models.CreateOrderRequest;
 import dev.azdanov.orderservice.domain.models.CreateOrderResponse;
+import dev.azdanov.orderservice.domain.models.OrderBrief;
+import dev.azdanov.orderservice.domain.models.OrderDetails;
 import dev.azdanov.orderservice.domain.models.OrderStatus;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -44,6 +47,16 @@ public class OrderService {
         List<OrderEntity> orders = orderRepository.findByStatus(OrderStatus.NEW);
         log.info("Found {} orders to process", orders.size());
         orders.forEach(this::processOrder);
+    }
+
+    public List<OrderBrief> findOrders(String userName) {
+        return orderRepository.findByUserName(userName);
+    }
+
+    public Optional<OrderDetails> findUserOrder(String userName, String orderNumber) {
+        return orderRepository
+                .findByUserNameAndOrderNumber(userName, orderNumber)
+                .map(OrderMapper::convertToOverview);
     }
 
     private void processOrder(OrderEntity order) {

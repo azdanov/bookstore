@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql(scripts = "/scripts/INIT_PRODUCTS.sql")
+@Sql("/scripts/INIT_PRODUCTS.sql")
 class ProductRepositoryJpaTest extends AbstractJpaTest {
 
     @Autowired

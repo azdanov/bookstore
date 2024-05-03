@@ -1,6 +1,7 @@
 package dev.azdanov.orderservice.domain;
 
 import dev.azdanov.orderservice.ApplicationProperties;
+import dev.azdanov.orderservice.domain.models.OrderEvent;
 import dev.azdanov.orderservice.domain.models.OrderEventType;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;

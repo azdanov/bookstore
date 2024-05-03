@@ -1,6 +1,5 @@
 package dev.azdanov.orderservice.domain.models;
 
-import dev.azdanov.orderservice.domain.OrderEvent;
 import java.time.LocalDateTime;
 import java.util.Set;
 

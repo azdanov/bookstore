@@ -1,0 +1,50 @@
+<!doctype html>
+<html
+  lang="en"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout}"
+>
+  <body>
+    <div layout:fragment="content">
+      <div x-data="initData()">
+        <template x-if="errorMessage.length > 0">
+          <div
+            class="alert alert-danger"
+            role="alert"
+            x-text="errorMessage"
+          ></div>
+        </template>
+        <h2>All Orders</h2>
+        <hr />
+        <div class="pb-3">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Order ID</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="order in orders">
+                <tr>
+                  <td>
+                    <a
+                      :href="'/orders/' + order.orderNumber"
+                      x-text="order.orderNumber"
+                      >OrderNumber</a
+                    >
+                  </td>
+                  <td x-text="order.status">status</td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div layout:fragment="pageScripts">
+      <script src="/js/orders.js"></script>
+    </div>
+  </body>
+</html>

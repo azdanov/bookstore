@@ -62,10 +62,14 @@ document.addEventListener("alpine:init", () => {
       this.submitting = true;
       let order = { ...this.orderForm, items: this.cart.items };
 
+      const token = document.querySelector("#csrf").content;
+      const header = document.querySelector("#csrfHeader").content;
+
       try {
         const response = await fetch("/api/orders", {
           method: "POST",
           headers: {
+            [header]: token,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(order),

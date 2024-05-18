@@ -23,10 +23,11 @@
 		<shedlock.version>5.13.0</shedlock.version>
 		<spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
 		<palantirJavaFormat.version>2.44.0</palantirJavaFormat.version>
-		<instancio.version>4.5.1</instancio.version>
+		<instancio.version>4.6.0</instancio.version>
 		<wiremock.version>3.5.4</wiremock.version>
 		<wiremock-testcontainers.version>1.0-alpha-13</wiremock-testcontainers.version>
 		<dockerImageName>azdanov/bookstore-${project.artifactId}</dockerImageName>
+		<testcontainers-keycloak.version>3.3.1</testcontainers-keycloak.version>
 	</properties>
 
 	<dependencies>
@@ -53,6 +54,14 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.github.resilience4j</groupId>
@@ -102,6 +111,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-testcontainers</artifactId>
 			<scope>test</scope>
@@ -147,6 +161,12 @@
 			<groupId>org.wiremock.integrations.testcontainers</groupId>
 			<artifactId>wiremock-testcontainers-module</artifactId>
 			<version>${wiremock-testcontainers.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+		<groupId>com.github.dasniko</groupId>
+			<artifactId>testcontainers-keycloak</artifactId>
+			<version>${testcontainers-keycloak.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -217,5 +237,12 @@
 			</plugin>
 		</plugins>
 	</build>
+	<repositories>
+		<repository>
+			<id>maven_central</id>
+			<name>Maven Central</name>
+			<url>https://repo.maven.apache.org/maven2/</url>
+		</repository>
+	</repositories>
 
 </project>

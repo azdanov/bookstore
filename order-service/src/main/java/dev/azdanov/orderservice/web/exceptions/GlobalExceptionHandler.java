@@ -23,7 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final String SERVICE_NAME = "order-service";
-    public static final String CATEGORY_GENERIC = "Generic";
+    private static final String CATEGORY_GENERIC = "Generic";
 
     private static final URI INTERNAL_SERVER_ERROR_TYPE = URI.create("https://http.dev/500");
     private static final URI NOT_FOUND_TYPE = URI.create("https://http.dev/404");

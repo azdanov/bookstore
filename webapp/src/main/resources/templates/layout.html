@@ -4,11 +4,12 @@
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:th="http://www.thymeleaf.org"
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Bookstore</title>
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Bookstore</title>
     <meta
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
       name="viewport"
@@ -47,7 +48,7 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li class="nav-item">
+              <li class="nav-item" sec:authorize="isAuthenticated()">
                 <a class="nav-link" href="/orders" th:href="@{/orders}">
                   Orders
                 </a>
@@ -61,6 +62,17 @@
                 >
                   Cart <span id="cart-item-count">(0)</span>
                 </a>
+              </li>
+              <li class="nav-item" sec:authorize="!isAuthenticated()">
+                <a
+                  class="nav-link"
+                  href="/oauth2/authorization/bookstore-webapp"
+                >
+                  Login
+                </a>
+              </li>
+              <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/logout"> Logout </a>
               </li>
             </ul>
           </div>

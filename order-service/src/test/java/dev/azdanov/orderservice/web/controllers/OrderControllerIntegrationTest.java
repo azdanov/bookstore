@@ -29,6 +29,7 @@ class OrderControllerIntegrationTest extends AbstractIntegrationTest {
 
             var payload = createValidOrderRequest();
             given().contentType(ContentType.JSON)
+                    .header("Authorization", "Bearer " + getToken())
                     .body(payload)
                     .when()
                     .post("/api/v1/orders")
@@ -41,6 +42,7 @@ class OrderControllerIntegrationTest extends AbstractIntegrationTest {
         void shouldReturnBadRequestWhenMandatoryDataIsMissing() {
             var payload = createOrderRequestWithInvalidCustomer();
             given().contentType(ContentType.JSON)
+                    .header("Authorization", "Bearer " + getToken())
                     .body(payload)
                     .when()
                     .post("/api/v1/orders")
@@ -54,6 +56,7 @@ class OrderControllerIntegrationTest extends AbstractIntegrationTest {
         @Test
         void shouldGetOrdersSuccessfully() {
             List<OrderBrief> orderSummaries = given().when()
+                    .header("Authorization", "Bearer " + getToken())
                     .get("/api/v1/orders")
                     .then()
                     .statusCode(200)
@@ -72,6 +75,7 @@ class OrderControllerIntegrationTest extends AbstractIntegrationTest {
         @Test
         void shouldGetOrderSuccessfully() {
             given().when()
+                    .header("Authorization", "Bearer " + getToken())
                     .get("/api/v1/orders/{orderNumber}", orderNumber)
                     .then()
                     .statusCode(200)

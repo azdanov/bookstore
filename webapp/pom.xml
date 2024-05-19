@@ -22,7 +22,6 @@
         <palantirJavaFormat.version>2.44.0</palantirJavaFormat.version>
         <dockerImageName>azdanov/bookstore-${project.artifactId}</dockerImageName>
         <bootstrap.version>5.3.3</bootstrap.version>
-        <jquery.version>3.7.1</jquery.version>
         <font-awesome.version>6.5.1</font-awesome.version>
         <alpinejs.version>3.13.10</alpinejs.version>
     </properties>

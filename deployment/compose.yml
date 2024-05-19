@@ -6,11 +6,16 @@ services:
     container_name: catalog-service
     profiles:
       - app
+    labels:
+      logging: "promtail"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - DB_URL=jdbc:postgresql://catalog-db:5432/postgres
       - DB_USERNAME=postgres
       - DB_PASSWORD=postgres
+      - SWAGGER_API_GATEWAY_URL=http://api-gateway:8989/catalog
+      - MANAGEMENT_TRACING_ENABLED=true
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
     ports:
       - "8081:8081"
     restart: unless-stopped
@@ -28,6 +33,8 @@ services:
     container_name: order-service
     profiles:
       - app
+    labels:
+      logging: "promtail"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - ORDERS_CATALOG_SERVICE_URL=http://api-gateway:8989/catalog
@@ -39,6 +46,9 @@ services:
       - RABBITMQ_USERNAME=guest
       - RABBITMQ_PASSWORD=guest
       - OAUTH2_SERVER_URL=http://keycloak:9191
+      - SWAGGER_API_GATEWAY_URL=http://api-gateway:8989/orders
+      - MANAGEMENT_TRACING_ENABLED=true
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
     ports:
       - "8082:8082"
     restart: unless-stopped
@@ -57,6 +67,8 @@ services:
     container_name: notification-service
     profiles:
       - app
+    labels:
+      logging: "promtail"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - DB_URL=jdbc:postgresql://notifications-db:5432/postgres
@@ -68,6 +80,8 @@ services:
       - RABBITMQ_PASSWORD=guest
       - MAIL_HOST=mailpit
       - MAIL_PORT=1025
+      - MANAGEMENT_TRACING_ENABLED=true
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
     ports:
       - "8083:8083"
     restart: unless-stopped
@@ -89,10 +103,14 @@ services:
     container_name: api-gateway
     profiles:
       - app
+    labels:
+      logging: "promtail"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - CATALOG_SERVICE_URL=http://catalog-service:8081
       - ORDER_SERVICE_URL=http://order-service:8082
+      - MANAGEMENT_TRACING_ENABLED=true
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
     ports:
       - "8989:8989"
     restart: unless-stopped
@@ -106,10 +124,14 @@ services:
     container_name: webapp
     profiles:
       - app
+    labels:
+      logging: "promtail"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - BOOKSTORE_API_GATEWAY_URL=http://api-gateway:8989
       - OAUTH2_SERVER_URL=http://keycloak:9191
+      - MANAGEMENT_TRACING_ENABLED=true
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
     ports:
       - "8080:8080"
     restart: unless-stopped
@@ -234,3 +256,67 @@ services:
       resources:
         limits:
           memory: 2gb
+
+  prometheus:
+    image: prom/prometheus:v2.51.2
+    container_name: prometheus
+    profiles:
+      - monitoring
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command: "--config.file=/etc/prometheus/prometheus.yml"
+
+  promtail:
+    image: grafana/promtail:3.0.0
+    container_name: promtail
+    profiles:
+      - monitoring
+    volumes:
+      - ./promtail/promtail-docker-config.yml:/etc/promtail/docker-config.yml
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: "--config.file=/etc/promtail/docker-config.yml"
+
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: loki
+    profiles:
+      - monitoring
+    command: "-config.file=/etc/loki/local-config.yaml"
+    ports:
+      - "3100:3100"
+    depends_on:
+      - promtail
+
+  tempo:
+    image: grafana/tempo:2.4.1
+    container_name: tempo
+    profiles:
+      - monitoring
+    command: "-config.file /etc/tempo-config.yml"
+    ports:
+      - "3200:3200" # Tempo
+      - "9411:9411" # Zipkin
+    volumes:
+      - ./tempo/tempo.yml:/etc/tempo-config.yml
+
+  grafana:
+    image: grafana/grafana:10.4.2
+    container_name: grafana
+    profiles:
+      - monitoring
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards/
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources/
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+
+volumes:
+  grafana_data: {}

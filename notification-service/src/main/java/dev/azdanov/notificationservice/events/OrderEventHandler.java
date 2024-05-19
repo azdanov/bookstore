@@ -51,10 +51,10 @@ public class OrderEventHandler {
 
     private void handleEvent(OrderEvent event, NotificationTemplate template) {
         if (orderEventRepository.existsByEventId(event.eventId())) {
-            log.warn("Received duplicate order event {}", event.eventId());
+            log.warn("Received duplicate order event {}", event);
             return;
         }
-        log.info("Received an order event for order {}", event.orderNumber());
+        log.info("Received an order event {}", event);
         notificationService.sendNotification(event, template);
         var orderEvent = new OrderEventEntity(event.eventId());
         orderEventRepository.save(orderEvent);

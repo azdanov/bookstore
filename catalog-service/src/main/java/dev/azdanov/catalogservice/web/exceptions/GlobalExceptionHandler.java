@@ -3,6 +3,8 @@ package dev.azdanov.catalogservice.web.exceptions;
 import dev.azdanov.catalogservice.domain.ProductNotFoundException;
 import java.net.URI;
 import java.time.Instant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,6 +14,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     private static final String SERVICE_NAME = "catalog-service";
     public static final String CATEGORY_GENERIC = "Generic";
     private static final URI INTERNAL_SERVER_ERROR_TYPE = URI.create("https://http.dev/500");
@@ -19,6 +23,8 @@ class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     ProblemDetail handleUnhandledException(Exception e) {
+        log.error("Unhandled exception", e);
+
         return buildProblemDetail(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Internal Server Error",
@@ -29,6 +35,8 @@ class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ProductNotFoundException.class)
     ProblemDetail handleProductNotFoundException(ProductNotFoundException e) {
+        log.warn("Product not found", e);
+
         return buildProblemDetail(
                 HttpStatus.NOT_FOUND, "Product Not Found", NOT_FOUND_TYPE, e.getMessage(), CATEGORY_GENERIC);
     }

@@ -5,6 +5,8 @@ import dev.azdanov.orderservice.domain.OrderNotFoundException;
 import java.net.URI;
 import java.time.Instant;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -22,6 +24,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     private static final String SERVICE_NAME = "order-service";
     private static final String CATEGORY_GENERIC = "Generic";
 
@@ -31,6 +35,8 @@ class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     ProblemDetail handleUnhandledException(Exception e) {
+        log.error("Unhandled exception occurred");
+
         return buildProblemDetail(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Internal Server Error",
@@ -41,12 +47,16 @@ class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(OrderNotFoundException.class)
     ProblemDetail handleOrderNotFoundException(OrderNotFoundException e) {
+        log.warn("Order not found");
+
         return buildProblemDetail(
                 HttpStatus.NOT_FOUND, "Order Not Found", NOT_FOUND_TYPE, e.getMessage(), CATEGORY_GENERIC);
     }
 
     @ExceptionHandler(InvalidOrderException.class)
     ProblemDetail handleInvalidOrderException(InvalidOrderException e) {
+        log.warn("Invalid order creation request");
+
         return buildProblemDetail(
                 HttpStatus.BAD_REQUEST,
                 "Invalid Order Creation Request",
@@ -64,6 +74,8 @@ class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> errors = ex.getBindingResult().getAllErrors().stream()
                 .map(ObjectError::getDefaultMessage)
                 .toList();
+
+        log.warn("Invalid request payload: {}", errors);
 
         ProblemDetail problemDetail = buildProblemDetail(
                 HttpStatus.BAD_REQUEST, "Bad Request", BAD_REQUEST_TYPE, "Invalid request payload", CATEGORY_GENERIC);

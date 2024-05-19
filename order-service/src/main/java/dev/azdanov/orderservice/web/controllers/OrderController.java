@@ -13,7 +13,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -34,21 +40,21 @@ class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     CreateOrderResponse createOrder(@Valid @RequestBody CreateOrderRequest request) {
         String userName = getUserName();
-        log.info("Creating order for user: {}", userName);
+        log.info("Creating order: {} for user: {}", request, userName);
         return orderService.createOrder(userName, request);
     }
 
     @GetMapping
     List<OrderBrief> getOrders() {
         String userName = getUserName();
-        log.info("Fetching orders for user {}", userName);
+        log.info("Fetching orders for user: {}", userName);
         return orderService.findOrders(userName);
     }
 
     @GetMapping("/{orderNumber}")
     OrderDetails getOrder(@PathVariable String orderNumber) {
         String userName = getUserName();
-        log.info("Fetching order {} for user {}", orderNumber, userName);
+        log.info("Fetching order: {} for user: {}", orderNumber, userName);
         return orderService
                 .findUserOrder(userName, orderNumber)
                 .orElseThrow(() -> new OrderNotFoundException(orderNumber));

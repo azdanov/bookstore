@@ -29,7 +29,7 @@ class OpenAPI3Configuration {
         return new OpenAPI()
                 .info(new Info()
                         .title("Order Service APIs")
-                        .description("BookStore Order Service APIs")
+                        .description("Bookstore Order Service APIs")
                         .version("v1.0.0")
                         .contact(new Contact().name("azdanov").email("anton@azdanov.dev")))
                 .servers(List.of(new Server().url(apiGatewayUrl)))

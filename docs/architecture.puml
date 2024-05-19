@@ -1,0 +1,36 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User", "A user of the bookstore application")
+
+Container(webapp, "Webapp", "Spring Boot", "Provides the web interface for the bookstore")
+Container(api_gateway, "API Gateway", "Spring Boot", "Routes requests to the appropriate services")
+Container(catalog_service, "Catalog Service", "Spring Boot", "Manages the book catalog")
+Container(order_service, "Order Service", "Spring Boot", "Handles order processing")
+Container(notification_service, "Notification Service", "Spring Boot", "Sends notifications related to the bookstore")
+
+ContainerDb(catalog_db, "Catalog DB", "PostgreSQL", "Stores the book catalog data")
+ContainerDb(order_db, "Order DB", "PostgreSQL", "Stores the order data")
+ContainerDb(notification_db, "Notification DB", "PostgreSQL", "Stores the notification data")
+
+ContainerQueue(rabbitmq, "RabbitMQ", "RabbitMQ", "Handles messaging between services")
+
+Container(keycloak, "Keycloak", "Keycloak", "Provides OAuth2 authentication and authorization")
+
+Rel(user, webapp, "Uses", "HTTPS")
+
+Rel(webapp, api_gateway, "Sends requests to", "HTTPS")
+Rel(api_gateway, catalog_service, "Routes requests to", "HTTPS")
+Rel(api_gateway, order_service, "Routes requests to", "HTTPS")
+
+Rel(catalog_service, catalog_db, "Reads from and writes to", "PostgreSQL")
+Rel(order_service, order_db, "Reads from and writes to", "PostgreSQL")
+Rel(notification_service, notification_db, "Reads from and writes to", "PostgreSQL")
+
+Rel(order_service, rabbitmq, "Sends messages to", "AMQP")
+Rel(notification_service, rabbitmq, "Receives messages from", "AMQP")
+
+Rel(webapp, keycloak, "Authenticates and authorizes with", "HTTPS")
+Rel(order_service, keycloak, "Authenticates and authorizes with", "HTTPS")
+
+@enduml

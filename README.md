@@ -20,6 +20,7 @@ The project consists of the following services:
 - `webapp`: The web application frontend for the bookstore. It communicates with the backend services through the `api-gateway` and integrates with Keycloak for OAuth2 authentication.
 
 ### Infrastructure
+
 The project includes the following infrastructure components:
 
 - `catalog-db`, `orders-db`, `notifications-db`: PostgreSQL databases for the respective services.
@@ -28,6 +29,9 @@ The project includes the following infrastructure components:
 - `keycloak`: An OAuth2 authentication server for securing the services and web application.
 
 ### Monitoring
+
+![Monitoring diagram](./docs/monitoring.png "Monitoring diagram")
+
 The project incorporates monitoring tools:
 
 - `prometheus`: A monitoring system for collecting metrics from the services.

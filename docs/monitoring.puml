@@ -1,0 +1,41 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Container(webapp, "Webapp", "Spring Boot", "Provides the web interface for the bookstore")
+Container(api_gateway, "API Gateway", "Spring Boot", "Routes requests to the appropriate services")
+Container(catalog_service, "Catalog Service", "Spring Boot", "Manages the book catalog")
+Container(order_service, "Order Service", "Spring Boot", "Handles order processing")
+Container(notification_service, "Notification Service", "Spring Boot", "Sends notifications related to the bookstore")
+
+Container(prometheus, "Prometheus", "Prometheus", "Collects metrics from the services")
+Container(grafana, "Grafana", "Grafana", "Visualizes metrics, logs, and traces")
+Container(loki, "Loki", "Loki", "Aggregates and stores logs")
+Container(promtail, "Promtail", "Promtail", "Collects and sends logs to Loki")
+Container(tempo, "Tempo", "Tempo", "Collects and stores distributed traces")
+
+Rel(webapp, prometheus, "Exposes metrics to", "Prometheus metrics endpoint")
+Rel(api_gateway, prometheus, "Exposes metrics to", "Prometheus metrics endpoint")
+Rel(catalog_service, prometheus, "Exposes metrics to", "Prometheus metrics endpoint")
+Rel(order_service, prometheus, "Exposes metrics to", "Prometheus metrics endpoint")
+Rel(notification_service, prometheus, "Exposes metrics to", "Prometheus metrics endpoint")
+
+Rel(prometheus, grafana, "Provides metrics to", "PromQL")
+
+Rel(webapp, promtail, "Sends logs to", "Stdout/Stderr")
+Rel(api_gateway, promtail, "Sends logs to", "Stdout/Stderr")
+Rel(catalog_service, promtail, "Sends logs to", "Stdout/Stderr")
+Rel(order_service, promtail, "Sends logs to", "Stdout/Stderr")
+Rel(notification_service, promtail, "Sends logs to", "Stdout/Stderr")
+
+Rel(promtail, loki, "Sends logs to", "HTTP API")
+Rel(loki, grafana, "Provides logs to", "LogQL")
+
+Rel(webapp, tempo, "Sends traces to", "Zipkin protocol")
+Rel(api_gateway, tempo, "Sends traces to", "Zipkin protocol")
+Rel(catalog_service, tempo, "Sends traces to", "Zipkin protocol")
+Rel(order_service, tempo, "Sends traces to", "Zipkin protocol")
+Rel(notification_service, tempo, "Sends traces to", "Zipkin protocol")
+
+Rel(tempo, grafana, "Provides traces to", "Tempo API")
+
+@enduml
